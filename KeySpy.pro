@@ -4,9 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT += core gui
 
-TARGET = KeySpy
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET   = KeySpy
 TEMPLATE = app
 
 
@@ -46,4 +48,9 @@ CONFIG (debug, debug|release) {
 
 
 
-SOURCES += src/main.cpp
+SOURCES +=  src/main.cpp \
+            src/keyboardlistner.cpp
+
+HEADERS +=  \
+            src/keyboardlistner.h \
+            src/virtualkeys.h
