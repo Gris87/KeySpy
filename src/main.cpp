@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QThread>
 
-#include "keyboardlistner.h"
+#include "keyboardlistener.h"
 
 
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 
 
-    KeyboardListner *listener = new KeyboardListner();
+    KeyboardListener *listener = new KeyboardListener();
 
     int res = a.exec();
     delete listener;

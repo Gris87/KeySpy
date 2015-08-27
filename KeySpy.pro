@@ -49,8 +49,8 @@ CONFIG (debug, debug|release) {
 
 
 SOURCES +=  src/main.cpp \
-            src/keyboardlistner.cpp
+    src/keyboardlistener.cpp
 
 HEADERS +=  \
-            src/keyboardlistner.h \
-            src/virtualkeys.h
+            src/virtualkeys.h \
+    src/keyboardlistener.h

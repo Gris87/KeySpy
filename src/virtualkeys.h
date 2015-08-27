@@ -214,7 +214,11 @@ const hhb_vkey hhb_vkey_list[] =
     { "VK_OEM_CLEAR", 0xFE, "Clear key" }
 };
 
-QString virtualKeyToString(quint8 vkey)
+
+
+QString unknown = "UNKNOWN";
+
+const QString& virtualKeyToString(quint8 vkey)
 {
     int count = sizeof(hhb_vkey_list) / sizeof(hhb_vkey_list[0]);
 
@@ -226,7 +230,7 @@ QString virtualKeyToString(quint8 vkey)
         }
     }
 
-    return "UNKNOWN";
+    return unknown;
 }
 
 #endif // VIRTUALKEYS
