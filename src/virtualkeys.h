@@ -1,5 +1,5 @@
-#ifndef VIRTUALKEYS
-#define VIRTUALKEYS
+#ifndef VIRTUALKEYS_H
+#define VIRTUALKEYS_H
 
 #include <Qt>
 
@@ -233,4 +233,4 @@ const QString& virtualKeyToString(quint8 vkey)
     return unknown;
 }
 
-#endif // VIRTUALKEYS
+#endif // VIRTUALKEYS_H
