@@ -5,6 +5,7 @@
 #include <QThread>
 
 #include "keyboardlistener.h"
+#include "mailagent.h"
 
 
 
@@ -31,10 +32,13 @@ int main(int argc, char *argv[])
 
 
 
-    KeyboardListener *listener = new KeyboardListener();
+    KeyboardListener *listener  = new KeyboardListener();
+    MailAgent        *mailAgent = new MailAgent();
 
     int res = a.exec();
+
     delete listener;
+    delete mailAgent;
 
     return res;
 }

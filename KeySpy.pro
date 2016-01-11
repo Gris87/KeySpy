@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -51,10 +51,11 @@ CONFIG (debug, debug|release) {
 SOURCES +=  \
             src/keyboardlistener.cpp \
             src/mailagent.cpp \
-            src/main.cpp
+            src/main.cpp \
+            src/smtp.cpp
 
 HEADERS +=  \
             src/keyboardlistener.h \
             src/mailagent.h \
-            src/virtualkeys.h
-
+            src/virtualkeys.h \
+            src/smtp.h
