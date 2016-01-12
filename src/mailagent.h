@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QTimer>
 
+#include "smtp.h"
+
 
 
 class MailAgent : public QObject
@@ -11,9 +13,11 @@ class MailAgent : public QObject
     Q_OBJECT
 public:
     explicit MailAgent(QObject *parent = 0);
+    ~MailAgent();
 
 private:
-    QTimer mTimer;
+    QTimer  mTimer;
+    Smtp   *mSmtp;
 
 private slots:
     void onTimeout();

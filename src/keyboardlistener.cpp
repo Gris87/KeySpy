@@ -164,16 +164,24 @@ LRESULT CALLBACK KeyboardListener::processKeyboardEvent(int nCode, WPARAM wParam
 
                 // ---------------------------------------------------------------------------------------
 
+                static QString dir      = QCoreApplication::applicationDirPath();
                 static QString fileName = "";
 
-                if (fileName == "")
+                QString newFileName = dir + "/Reports/" + QDate::currentDate().toString("yyyy-MM-dd") + ".rpt";
+
+                if (fileName != newFileName)
                 {
-                    QString dir = QCoreApplication::applicationDirPath();
+                    fileName = newFileName;
 
-                    QDir appDir;
-                    appDir.mkpath(dir + "/Reports");
-
-                    fileName = dir + "/Reports/" + QDate::currentDate().toString("yyyy-MM-dd") + ".rpt";
+                    if (mFile.isOpen())
+                    {
+                        mFile.close();
+                    }
+                    else
+                    {
+                        QDir appDir;
+                        appDir.mkpath(dir + "/Reports");
+                    }
 
                     mFile.setFileName(fileName);
                     mFile.open(QIODevice::Append);
