@@ -1,19 +1,13 @@
 #include "mailagent.h"
 
 #include <QCoreApplication>
+#include <QDate>
 #include <QDebug>
 #include <QDir>
 
 
 
 //#define USE_GMAIL
-
-#ifdef USE_GMAIL
-#define POP3_SERVER "pop.gmail.com"
-#else
-#define POP3_SERVER "pop.yandex.ru"
-#endif
-#define POP3_PORT   995
 
 #ifdef USE_GMAIL
 #define SMTP_SERVER "smtp.gmail.com"
@@ -34,6 +28,8 @@
 MailAgent::MailAgent(QObject *parent)
     : QObject(parent)
 {
+    mProcess = 0;
+
     connect(&mTimer, SIGNAL(timeout()), this, SLOT(onTimeout()));
 
     mTimer.start(300000);
@@ -42,6 +38,7 @@ MailAgent::MailAgent(QObject *parent)
 
 MailAgent::~MailAgent()
 {
+    stopProcess();
 }
 
 void MailAgent::onTimeout()
@@ -50,21 +47,79 @@ void MailAgent::onTimeout()
 
     static QString dir = QCoreApplication::applicationDirPath();
 
-    QDir reportsDir(dir + "/Reports");
-    QStringList files = reportsDir.entryList(QDir::Files, QDir::Time);
+    QString prevDate = "";
+    QString curDate  = QDate::currentDate().toString("yyyy-MM-dd");
 
-    if (files.length() > 0)
+    QFile file(dir + "/time.dat");
+
+    if (file.exists())
     {
-        while (files.length() > 7)
+        file.open(QIODevice::ReadOnly);
+        prevDate = QString::fromUtf8(file.readAll());
+        file.close();
+    }
+
+    if (curDate != prevDate)
+    {
+        stopProcess();
+
+
+
+        QDir reportsDir(dir + "/Reports");
+        QStringList files = reportsDir.entryList(QDir::Files, QDir::Time);
+
+        if (files.length() > 0)
         {
-            files.removeAt(7);
+            while (files.length() > 7)
+            {
+                files.removeAt(7);
+            }
+
+            qDebug() << "Sending files:" << files;
+
+            for (int i = 0; i < files.length(); ++i)
+            {
+                files[i] = "Reports/" + files.at(i);
+            }
         }
 
-        qDebug() << "Sending files:" << files;
+
+
+        QStringList arguments;
+
+        arguments.append("-host:" USERNAME ":" PASSWORD "@" SMTP_SERVER ":" + QString::number(SMTP_PORT));
+        arguments.append("-from:" USERNAME);
+        arguments.append("-to:Gris87@yandex.ru");
+        arguments.append("-subject:Report");
+        arguments.append("-body:Hi");
+        arguments.append("-secureport");
 
         for (int i = 0; i < files.length(); ++i)
         {
-            files[i] = "Reports/" + files.at(i);
+            arguments.append("-a64:" + files.at(i));
         }
+
+        qDebug() << arguments;
+
+        mProcess = new QProcess(this);
+        mProcess->start(QCoreApplication::applicationDirPath() + "/CMail.exe", arguments);
+
+
+
+        file.open(QIODevice::WriteOnly);
+        file.write(curDate.toUtf8());
+        file.close();
+    }
+}
+
+void MailAgent::stopProcess()
+{
+    if (mProcess)
+    {
+        mProcess->kill();
+        mProcess->waitForFinished();
+
+        delete mProcess;
+        mProcess = 0;
     }
 }

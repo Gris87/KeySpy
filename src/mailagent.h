@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QProcess>
 
 
 
@@ -14,7 +15,10 @@ public:
     ~MailAgent();
 
 private:
-    QTimer mTimer;
+    QTimer    mTimer;
+    QProcess *mProcess;
+
+    void stopProcess();
 
 private slots:
     void onTimeout();
