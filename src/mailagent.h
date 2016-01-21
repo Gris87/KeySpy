@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QTimer>
 
-#include "smtp.h"
-
 
 
 class MailAgent : public QObject
@@ -16,8 +14,7 @@ public:
     ~MailAgent();
 
 private:
-    QTimer  mTimer;
-    Smtp   *mSmtp;
+    QTimer mTimer;
 
 private slots:
     void onTimeout();

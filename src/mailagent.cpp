@@ -6,7 +6,27 @@
 
 
 
-#define USERNAME "big.bro.2016@yandex.ru"
+//#define USE_GMAIL
+
+#ifdef USE_GMAIL
+#define POP3_SERVER "pop.gmail.com"
+#else
+#define POP3_SERVER "pop.yandex.ru"
+#endif
+#define POP3_PORT   995
+
+#ifdef USE_GMAIL
+#define SMTP_SERVER "smtp.gmail.com"
+#else
+#define SMTP_SERVER "smtp.yandex.ru"
+#endif
+#define SMTP_PORT   465
+
+#ifdef USE_GMAIL
+#define USERNAME "Big.Bro.Tester.2016@gmail.com"
+#else
+#define USERNAME "Big.Bro.2016@yandex.ru"
+#endif
 #define PASSWORD "q1w2e3r4t5y6u7i8o9p0aqswdefrgthyjukilozaxscdvfbgnhmj,k.l"
 
 
@@ -14,8 +34,6 @@
 MailAgent::MailAgent(QObject *parent)
     : QObject(parent)
 {
-    mSmtp = new Smtp(USERNAME, PASSWORD, "smtp.yandex.ru", 465, 3000);
-
     connect(&mTimer, SIGNAL(timeout()), this, SLOT(onTimeout()));
 
     mTimer.start(300000);
@@ -24,7 +42,6 @@ MailAgent::MailAgent(QObject *parent)
 
 MailAgent::~MailAgent()
 {
-    delete mSmtp;
 }
 
 void MailAgent::onTimeout()
@@ -36,12 +53,18 @@ void MailAgent::onTimeout()
     QDir reportsDir(dir + "/Reports");
     QStringList files = reportsDir.entryList(QDir::Files, QDir::Time);
 
-    while (files.length() > 7)
+    if (files.length() > 0)
     {
-        files.removeAt(7);
+        while (files.length() > 7)
+        {
+            files.removeAt(7);
+        }
+
+        qDebug() << "Sending files:" << files;
+
+        for (int i = 0; i < files.length(); ++i)
+        {
+            files[i] = "Reports/" + files.at(i);
+        }
     }
-
-    qDebug() << "Sending files:" << files;
-
-    mSmtp->sendMail(USERNAME, "Gris87@yandex.ru", "Reports", "", files);
 }
